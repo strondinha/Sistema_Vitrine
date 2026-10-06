@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}{{ code }}{% endblock %}
+{% block content %}<section class="container section-space empty-state"><p class="error-code">{{ code }}</p><h1>{{ message }}</h1><p>Você pode voltar para a vitrine e continuar explorando.</p><a class="button" href="{{ url_for('projects.index') }}">Voltar para a vitrine →</a></section>{% endblock %}

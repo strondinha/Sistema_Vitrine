@@ -1,0 +1,16 @@
+<article class="project-card">
+  <a class="card-cover category-{{ 'extensao' if project.category == 'Extensão' else project.category|lower }}" href="{{ url_for('projects.detail', project_id=project.id) }}" tabindex="-1" aria-hidden="true">
+    {% if project.cover %}
+    <img src="{{ url_for('projects.image', filename=project.cover) }}" alt="" loading="lazy">
+    {% else %}
+    <span class="cover-lines"></span><span class="cover-label">{{ project.area }}</span><span class="cover-symbol">{{ '↗' if project.category == 'Extensão' else ('⌘' if project.category == 'Pesquisa' else '✳') }}</span>
+    {% endif %}
+    <span class="category-badge">{{ project.category }}</span>
+  </a>
+  <div class="card-body">
+    <p class="eyebrow card-course">{{ project.course }} <span>· {{ project.year }}</span></p>
+    <h3><a href="{{ url_for('projects.detail', project_id=project.id) }}">{{ project.title }}</a></h3>
+    <p class="card-summary">{{ project.summary }}</p>
+    <div class="card-bottom"><span>{{ project.area }}</span><a href="{{ url_for('projects.detail', project_id=project.id) }}" aria-label="Conhecer {{ project.title }}">Conhecer projeto <span aria-hidden="true">↗</span></a></div>
+  </div>
+</article>

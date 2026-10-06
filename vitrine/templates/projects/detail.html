@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.title }}{% endblock %}
+{% block content %}
+<section class="detail-heading"><div class="container">
+  <a class="back-link" href="{{ url_for('projects.index') }}#projetos">← Voltar para a vitrine</a>
+  <div class="detail-tags"><span class="tag">{{ project.category }}</span><span>{{ project.area }}</span><span>{{ project.year }}</span>{% if project.status == 'draft' %}<span class="status-badge draft">Rascunho · visível apenas para você</span>{% endif %}</div>
+  <h1>{{ project.title }}</h1><p class="detail-summary">{{ project.summary }}</p>
+  <div class="detail-byline"><span>{{ project.course }}</span><span>Publicado por {{ project.owner_name }}</span>{% if g.user and g.user.id == project.user_id %}<a class="button button-small button-outline" href="{{ url_for('projects.edit', project_id=project.id) }}">Editar projeto ↗</a>{% endif %}</div>
+</div></section>
+<div class="container detail-layout section-space">
+  <article class="detail-content">
+    {% if images %}
+    <div class="gallery"><figure class="main-image"><img id="main-project-image" src="{{ url_for('projects.image', filename=images[0].filename) }}" alt="Imagem 1 do projeto {{ project.title }}"><figcaption id="image-caption">Imagem 1 de {{ images|length }}</figcaption></figure>
+    {% if images|length > 1 %}<div class="gallery-thumbnails">{% for image in images %}<button type="button" class="thumbnail {{ 'active' if loop.first }}" data-gallery-src="{{ url_for('projects.image', filename=image.filename) }}" data-gallery-alt="Imagem {{ loop.index }} do projeto {{ project.title }}" data-gallery-caption="Imagem {{ loop.index }} de {{ images|length }}" aria-label="Ver imagem {{ loop.index }}" aria-pressed="{{ 'true' if loop.first else 'false' }}"><img src="{{ url_for('projects.image', filename=image.filename) }}" alt="" loading="lazy"></button>{% endfor %}</div>{% endif %}</div>
+    {% endif %}
+    <section><p class="eyebrow">O projeto</p><h2>Sobre a iniciativa</h2><div class="prose-text">{{ project.description or project.summary }}</div></section>
+    <section><p class="eyebrow">Conhecimento em ação</p><h2>Resultados</h2><div class="prose-text">{{ project.results or 'Os resultados ainda não foram informados. Acompanhe as próximas atualizações deste projeto.' }}</div></section>
+    <section><h2>Equipe responsável</h2><div class="prose-text">{{ project.team }}</div>{% if project.advisor %}<p class="advisor"><strong>Orientação</strong><br>{{ project.advisor }}</p>{% endif %}</section>
+  </article>
+  <aside class="detail-sidebar" aria-label="Contatos e informações do projeto">
+    <div class="sidebar-panel"><p class="eyebrow">Vamos conversar</p><h2>Conecte-se ao projeto</h2><p class="muted">Conheça a iniciativa e entre em contato com seus responsáveis.</p>
+      {% if project.contact_email %}<a class="contact-link" href="mailto:{{ project.contact_email }}">E-mail <span>{{ project.contact_email }}</span></a>{% endif %}
+      {% if project.contact_phone %}<div class="contact-link">Telefone <span>{{ project.contact_phone }}</span></div>{% endif %}
+      {% if project.repository_url %}<a class="button full-width" href="{{ project.repository_url }}" target="_blank" rel="noopener noreferrer">Ver repositório ↗</a>{% endif %}
+      {% if project.external_url %}<a class="button full-width button-outline" href="{{ project.external_url }}" target="_blank" rel="noopener noreferrer">Link do projeto ↗</a>{% endif %}
+      {% if not project.contact_email and not project.contact_phone and not project.repository_url and not project.external_url %}<p class="field-help">A equipe ainda não informou contatos ou links públicos.</p>{% endif %}
+    </div>
+    <div class="project-facts"><h3>Informações</h3><dl><dt>Curso</dt><dd>{{ project.course }}</dd><dt>Área</dt><dd>{{ project.area }}</dd><dt>Ano</dt><dd>{{ project.year }}</dd><dt>Atualização</dt><dd>{{ project.updated_at|date_br }}</dd></dl><button class="text-link copy-link" type="button" data-copy-link>Copiar link do projeto ↗</button><p class="copy-status" aria-live="polite"></p></div>
+  </aside>
+</div>
+{% endblock %}

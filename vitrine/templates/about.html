@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Sobre a vitrine{% endblock %}
+{% block content %}
+<section class="about-hero"><div class="container"><p class="eyebrow">IFPI · Campus Corrente</p><h1>Um lugar para<br><em>compartilhar conhecimento.</em></h1><p>A Vitrine Virtual reúne projetos de ensino, pesquisa e extensão e aproxima a produção acadêmica das pessoas que podem se beneficiar dela.</p></div></section>
+<section class="container about-layout section-space"><article>
+  <h2>Por que uma vitrine?</h2><p>Muitos trabalhos desenvolvidos por alunos e professores ficam restritos a apresentações internas. Esta plataforma oferece um espaço para organizar projetos, apresentar resultados e facilitar o contato com seus responsáveis.</p>
+  <h2>Quem pode participar?</h2><p>Alunos e professores podem criar uma conta e cadastrar seus projetos. A comunidade de Corrente e região, empresas, comerciantes e estudantes de outras instituições podem explorar o catálogo sem precisar se cadastrar.</p>
+  <h2>Como funciona?</h2><ol class="steps"><li><strong>Cadastre sua conta.</strong><p>Use seu nome e e-mail e escolha uma senha.</p></li><li><strong>Apresente seu projeto.</strong><p>Informe resumo, curso, área, ano, equipe, resultados, imagens e contatos.</p></li><li><strong>Publique e compartilhe.</strong><p>Seu trabalho aparece na vitrine e pode ser encontrado pelas buscas e filtros.</p></li></ol>
+  <h2>Sobre o desenvolvimento</h2><p>Plataforma desenvolvida a partir do projeto acadêmico de Caio Vieira Vila Nova, Klesly de Souza Rocha e Lucas Maciel da Silva, do curso de Análise e Desenvolvimento de Sistemas do IFPI Campus Corrente, com orientação do professor Jurandir Cavalcante.</p><p>As informações de cada projeto são fornecidas por seu responsável. Esta é uma implementação acadêmica da proposta apresentada em 2026.</p>
+</article><aside class="sidebar-panel"><p class="eyebrow">Da ideia ao encontro</p><h2>Mostre o seu trabalho.</h2><p class="muted">Ajude a construir uma vitrine dos projetos do nosso campus.</p><a class="button full-width" href="{{ url_for('projects.create') }}">Cadastrar um projeto ↗</a><a class="text-link" href="{{ url_for('projects.index') }}#projetos">Explorar a vitrine →</a></aside></section>
+{% endblock %}

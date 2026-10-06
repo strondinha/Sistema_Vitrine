@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vitrine Virtual de projetos de ensino, pesquisa e extensão do IFPI Campus Corrente.">
+  <title>{% block title %}Vitrine Virtual{% endblock %} · IFPI Campus Corrente</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('projects.index') }}" aria-label="Vitrine Virtual, página inicial">
+        <span class="brand-mark" aria-hidden="true">V<span>.</span></span>
+        <span><strong>Vitrine Virtual</strong><small>IFPI · Campus Corrente</small></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+      <nav id="main-nav" class="main-nav" aria-label="Navegação principal">
+        <a href="{{ url_for('projects.index') }}" {% if request.endpoint == 'projects.index' %}aria-current="page"{% endif %}>Explorar projetos</a>
+        <a href="{{ url_for('pages.about') }}" {% if request.endpoint == 'pages.about' %}aria-current="page"{% endif %}>Sobre a vitrine</a>
+        {% if g.user %}
+          <a href="{{ url_for('projects.dashboard') }}" {% if request.endpoint == 'projects.dashboard' %}aria-current="page"{% endif %}>Meus projetos</a>
+          <form action="{{ url_for('auth.logout') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="nav-button" type="submit">Sair</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Entrar</a>
+          <a class="button button-small" href="{{ url_for('auth.register') }}">Criar conta <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <div class="container flashes" aria-live="polite">
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="notice {{ category }}" role="status">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div><strong>Conhecimento que encontra a comunidade.</strong><p>Projetos de ensino, pesquisa e extensão em um só lugar.</p></div>
+      <div><span>Vitrine Virtual</span><small>Projeto acadêmico · IFPI Campus Corrente</small></div>
+    </div>
+  </footer>
+</body>
+</html>

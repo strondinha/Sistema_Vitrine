@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Explore os projetos{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <p class="eyebrow"><span class="status-dot"></span> Ensino · Pesquisa · Extensão</p>
+      <h1>Ideias do campus.<br><em>Impacto na comunidade.</em></h1>
+      <p class="hero-copy">Conheça os projetos que nascem no IFPI Campus Corrente. Descubra soluções, encontre pessoas e aproxime-se do conhecimento.</p>
+      <div class="hero-actions"><a class="button" href="#projetos">Explorar a vitrine <span aria-hidden="true">↓</span></a><a class="text-link" href="{{ url_for('projects.create') }}">Divulgar meu projeto <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+      <span class="art-label label-top">IDEIAS EM MOVIMENTO</span>
+      <div class="art-main"><span>V</span><i></i></div>
+      <div class="art-note note-one">01 <strong>Investigar</strong></div>
+      <div class="art-note note-two">02 <strong>Criar</strong></div>
+      <div class="art-note note-three">03 <strong>Compartilhar ↗</strong></div>
+      <span class="art-label label-bottom">CORRENTE, PIAUÍ</span>
+    </div>
+  </div>
+</section>
+<div class="stats-strip"><div class="container stats-inner">
+  <div><strong>{{ stats.projects }}</strong><span>projetos publicados</span></div>
+  <div><strong>{{ stats.courses }}</strong><span>cursos representados</span></div>
+  <div><strong>{{ stats.areas }}</strong><span>áreas do conhecimento</span></div>
+  <p>Produção acadêmica<br><strong>aberta à comunidade.</strong></p>
+</div></div>
+<section id="projetos" class="container catalog section-space">
+  <div class="section-heading"><div><p class="eyebrow">Conheça o que estamos construindo</p><h2>Explore os projetos</h2></div><p>Uma ideia pode abrir<br>novas possibilidades.</p></div>
+  <form class="filter-panel" method="get" action="{{ url_for('projects.index') }}#projetos" role="search">
+    <div class="search-row"><label class="search-label" for="q"><span aria-hidden="true">⌕</span><input id="q" name="q" type="search" placeholder="Busque por título, resumo ou equipe..." aria-label="Buscar projetos" value="{{ filters.q }}" maxlength="200"></label><button class="button" type="submit">Buscar <span aria-hidden="true">↗</span></button></div>
+    <div class="filter-row">
+      <div><label for="course">Curso</label><select name="course" id="course"><option value="">Todos os cursos</option>{% for value in options.course %}<option value="{{ value }}" {% if value == filters.course %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+      <div><label for="area">Área do conhecimento</label><select name="area" id="area"><option value="">Todas as áreas</option>{% for value in options.area %}<option value="{{ value }}" {% if value == filters.area %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+      <div><label for="year">Ano</label><select name="year" id="year"><option value="">Todos os anos</option>{% for value in options.year %}<option value="{{ value }}" {% if value|string == filters.year %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+      <div><label for="category">Tipo de projeto</label><select name="category" id="category"><option value="">Todos os tipos</option>{% for value in categories %}<option value="{{ value }}" {% if value == filters.category %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+    </div>
+    <div class="filter-bottom"><span>Selecione os filtros e clique em Buscar.</span>{% if filters.values()|select|list %}<a href="{{ url_for('projects.index') }}#projetos">Limpar filtros ×</a>{% endif %}</div>
+  </form>
+  <div class="results-heading"><p><strong>{{ total }}</strong> {{ 'projeto encontrado' if total == 1 else 'projetos encontrados' }}</p><span>Mais recentes primeiro</span></div>
+  {% if projects %}
+  <div class="project-grid">{% for project in projects %}{% include 'projects/_card.html' %}{% endfor %}</div>
+  {% else %}
+  <div class="empty-state"><span class="empty-icon" aria-hidden="true">✳</span><h3>{{ 'Nenhum projeto com esses filtros' if filters.values()|select|list else 'A próxima ideia pode ser a sua' }}</h3><p>{{ 'Experimente outro termo ou limpe os filtros para explorar a vitrine.' if filters.values()|select|list else 'A vitrine está pronta para receber os primeiros projetos. Crie sua conta e compartilhe seu trabalho com a comunidade.' }}</p><a class="button" href="{{ url_for('projects.index') + '#projetos' if filters.values()|select|list else url_for('projects.create') }}">{{ 'Ver todos os projetos' if filters.values()|select|list else 'Cadastrar primeiro projeto' }} <span aria-hidden="true">↗</span></a></div>
+  {% endif %}
+  {% if pages > 1 %}<nav class="pagination" aria-label="Paginação de projetos">
+    {% if page > 1 %}<a href="{{ url_for('projects.index', page=page-1, **filters) }}#projetos">← Anterior</a>{% endif %}
+    <span>Página {{ page }} de {{ pages }}</span>
+    {% if page < pages %}<a href="{{ url_for('projects.index', page=page+1, **filters) }}#projetos">Próxima →</a>{% endif %}
+  </nav>{% endif %}
+</section>
+<section class="community-band"><div class="container"><div><p class="eyebrow">Seu trabalho merece ser conhecido</p><h2>Compartilhe o que você<br>está transformando.</h2></div><div><p>De uma atividade em sala a uma ação de extensão: cada projeto ajuda a contar a história do nosso campus.</p><a class="button button-light" href="{{ url_for('projects.create') }}">Publicar um projeto <span aria-hidden="true">↗</span></a></div></div></section>
+{% endblock %}

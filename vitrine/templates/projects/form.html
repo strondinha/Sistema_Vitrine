@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar projeto' if project else 'Novo projeto' }}{% endblock %}
+{% block content %}
+<section class="container editor section-space">
+  <a class="back-link" href="{{ url_for('projects.dashboard') }}">← Meus projetos</a>
+  <div class="section-heading"><div><p class="eyebrow">Compartilhe conhecimento</p><h1>{{ 'Editar projeto' if project else 'Cadastre seu projeto' }}</h1><p class="muted">Conte sua ideia, apresente a equipe e mostre o que vocês estão construindo.</p></div></div>
+  {% include '_errors.html' %}
+  <form method="post" enctype="multipart/form-data" class="project-editor">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p class="required-note">Campos com * são obrigatórios.</p>
+    <fieldset><legend><span>01</span> Informações do projeto</legend>
+      <div class="field"><label for="title">Título *</label><input id="title" name="title" value="{{ form.get('title', '') }}" maxlength="160" required placeholder="Dê um nome ao seu projeto"></div>
+      <div class="form-grid"><div class="field"><label for="course">Curso *</label><input id="course" name="course" list="courses" value="{{ form.get('course', '') }}" maxlength="120" required placeholder="Selecione ou digite o curso"><datalist id="courses">{% for value in courses %}<option value="{{ value }}">{% endfor %}</datalist><small>As sugestões são editáveis. Você pode informar outro curso.</small></div><div class="field"><label for="area">Área do conhecimento *</label><input id="area" name="area" list="areas" value="{{ form.get('area', '') }}" maxlength="100" required placeholder="Selecione ou digite a área"><datalist id="areas">{% for value in areas %}<option value="{{ value }}">{% endfor %}</datalist></div></div>
+      <div class="form-grid"><div class="field"><label for="category">Tipo de projeto *</label><select id="category" name="category" required>{% for value in categories %}<option value="{{ value }}" {% if form.get('category') == value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div><div class="field"><label for="year">Ano *</label><input id="year" name="year" type="number" min="1900" max="2100" value="{{ form.get('year', '') }}" required></div></div>
+      <div class="field"><label for="summary">Resumo *</label><textarea id="summary" name="summary" rows="4" maxlength="1000" required data-count aria-describedby="summary-help">{{ form.get('summary', '') }}</textarea><small id="summary-help">Apresente a ideia e seu objetivo. <span data-counter-for="summary"></span></small></div>
+      <div class="field"><label for="description">Descrição completa</label><textarea id="description" name="description" rows="7" maxlength="15000" placeholder="Explique o problema, os objetivos e como o projeto foi desenvolvido.">{{ form.get('description', '') }}</textarea></div>
+      <div class="field"><label for="results">Resultados</label><textarea id="results" name="results" rows="6" maxlength="15000" placeholder="Conte os resultados alcançados ou esperados.">{{ form.get('results', '') }}</textarea></div>
+    </fieldset>
+    <fieldset><legend><span>02</span> Equipe e contatos</legend>
+      <div class="field"><label for="team">Equipe responsável *</label><textarea id="team" name="team" rows="3" maxlength="1000" required placeholder="Nomes dos integrantes e suas funções">{{ form.get('team', '') }}</textarea></div>
+      <div class="field"><label for="advisor">Professor(a) orientador(a)</label><input id="advisor" name="advisor" maxlength="200" value="{{ form.get('advisor', '') }}"></div>
+      <p class="field-help">Os contatos preenchidos abaixo ficarão públicos quando o projeto for publicado. Informe somente dados que a equipe autoriza divulgar.</p>
+      <div class="form-grid"><div class="field"><label for="contact_email">E-mail público de contato</label><input id="contact_email" name="contact_email" type="email" maxlength="254" value="{{ form.get('contact_email', '') }}"></div><div class="field"><label for="contact_phone">Telefone público de contato</label><input id="contact_phone" name="contact_phone" type="tel" maxlength="40" value="{{ form.get('contact_phone', '') }}" placeholder="(89) 99999-9999"></div></div>
+      <div class="field"><label for="repository_url">Link do repositório</label><input id="repository_url" name="repository_url" type="url" maxlength="1000" value="{{ form.get('repository_url', '') }}" placeholder="https://github.com/usuario/projeto"></div>
+      <div class="field"><label for="external_url">Outro link do projeto</label><input id="external_url" name="external_url" type="url" maxlength="1000" value="{{ form.get('external_url', '') }}" placeholder="https://..."></div>
+    </fieldset>
+    <fieldset><legend><span>03</span> Imagens</legend>
+      <p class="muted">Até 6 imagens por projeto, com no máximo 5 MB cada. Formatos JPG, PNG ou WEBP. A primeira imagem será a capa.</p>
+      {% if images %}<div class="existing-images">{% for image in images %}<label class="existing-image"><img src="{{ url_for('projects.image', filename=image.filename) }}" alt="Imagem atual {{ loop.index }}"><span><input type="checkbox" name="remove_images" value="{{ image.id }}"> Remover imagem {{ loop.index }}</span></label>{% endfor %}</div>{% endif %}
+      <div class="upload-area"><label for="images">Adicionar imagens <span aria-hidden="true">↑</span></label><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="upload-help"><small id="upload-help">Escolha fotos, registros ou capturas do seu projeto. Limite total do envio: 16 MB.</small></div>
+      <div class="image-preview" id="image-preview" aria-live="polite"></div>
+    </fieldset>
+    <fieldset><legend><span>04</span> Publicação</legend>
+      <div class="publication-options"><label><input type="radio" name="status" value="draft" {% if form.get('status') != 'published' %}checked{% endif %}><span><strong>Salvar como rascunho</strong><small>Visível apenas para você. Complete e publique depois.</small></span></label><label><input type="radio" name="status" value="published" {% if form.get('status') == 'published' %}checked{% endif %}><span><strong>Publicar na vitrine</strong><small>Disponível para a comunidade no catálogo público.</small></span></label></div>
+    </fieldset>
+    <div class="editor-actions"><a class="text-link" href="{{ url_for('projects.dashboard') }}">Cancelar</a><button class="button" type="submit">Salvar projeto <span aria-hidden="true">↗</span></button></div>
+  </form>
+</section>
+{% endblock %}

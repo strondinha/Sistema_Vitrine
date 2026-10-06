@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Criar conta{% endblock %}
+{% block content %}
+<section class="container auth-layout section-space">
+  <div class="auth-intro"><p class="eyebrow">Faça parte da vitrine</p><h1>Seu projeto.<br>Novos<br><em>encontros.</em></h1><p>Alunos e professores podem compartilhar projetos de ensino, pesquisa e extensão com toda a comunidade.</p><span class="auth-decoration" aria-hidden="true">✳</span></div>
+  <div class="form-card"><h2>Crie sua conta</h2><p class="muted">Comece a compartilhar conhecimento.</p>{% include '_errors.html' %}
+    <form method="post" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field"><label for="name">Nome completo</label><input id="name" name="name" minlength="2" maxlength="100" autocomplete="name" value="{{ form.get('name', '') }}" required></div>
+      <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" value="{{ form.get('email', '') }}" required></div>
+      <div class="field"><label for="role">Você é</label><select id="role" name="role" required><option value="">Selecione seu perfil</option><option value="aluno" {% if form.get('role') == 'aluno' %}selected{% endif %}>Aluno(a)</option><option value="professor" {% if form.get('role') == 'professor' %}selected{% endif %}>Professor(a)</option></select></div>
+      <div class="field"><label for="password">Senha</label><input id="password" name="password" type="password" minlength="8" maxlength="128" autocomplete="new-password" aria-describedby="password-help" required><small id="password-help">Use no mínimo 8 caracteres.</small></div>
+      <div class="field"><label for="confirm_password">Confirme a senha</label><input id="confirm_password" name="confirm_password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></div>
+      <p class="field-help">Seu e-mail de acesso não é exibido na vitrine. Você escolhe os contatos públicos ao cadastrar cada projeto.</p>
+      <button class="button full-width" type="submit">Criar conta <span aria-hidden="true">↗</span></button>
+    </form>
+    <p class="form-foot">Já tem uma conta? <a href="{{ url_for('auth.login') }}">Entre aqui</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+<section class="container auth-layout section-space">
+  <div class="auth-intro"><p class="eyebrow">Sua área na vitrine</p><h1>Boas ideias<br>merecem<br><em>ser vistas.</em></h1><p>Entre para cadastrar projetos, atualizar resultados e compartilhar o que você desenvolve no campus.</p><span class="auth-decoration" aria-hidden="true">↗</span></div>
+  <div class="form-card"><h2>Entre na sua conta</h2><p class="muted">Que bom ter você por aqui.</p>{% include '_errors.html' %}
+    <form method="post" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" maxlength="254" autocomplete="username" value="{{ form.get('email', '') }}" placeholder="seuemail@exemplo.com" required></div>
+      <div class="field"><label for="password">Senha</label><input id="password" name="password" type="password" maxlength="128" autocomplete="current-password" required></div>
+      <button class="button full-width" type="submit">Entrar <span aria-hidden="true">↗</span></button>
+    </form>
+    <p class="form-foot">Ainda não tem uma conta? <a href="{{ url_for('auth.register') }}">Cadastre-se</a></p>
+  </div>
+</section>
+{% endblock %}

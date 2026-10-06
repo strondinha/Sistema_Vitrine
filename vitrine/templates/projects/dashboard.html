@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Meus projetos{% endblock %}
+{% block content %}
+<section class="container section-space">
+  <div class="section-heading dashboard-heading"><div><p class="eyebrow">Olá, {{ g.user.name }}</p><h1>Meus projetos</h1><p class="muted">{{ projects|length }} projetos · {{ published }} publicados · {{ projects|length - published }} rascunhos</p></div><a class="button" href="{{ url_for('projects.create') }}">Novo projeto <span aria-hidden="true">＋</span></a></div>
+  {% if projects %}
+  <div class="dashboard-list">
+    {% for project in projects %}
+    <article class="dashboard-item">
+      <div class="dashboard-thumbnail category-{{ 'extensao' if project.category == 'Extensão' else project.category|lower }}">{% if project.cover %}<img src="{{ url_for('projects.image', filename=project.cover) }}" alt="" loading="lazy">{% else %}<span aria-hidden="true">{{ '↗' if project.category == 'Extensão' else '✳' }}</span>{% endif %}</div>
+      <div class="dashboard-info"><span class="status-badge {{ project.status }}">{{ 'Publicado' if project.status == 'published' else 'Rascunho' }}</span><h2><a href="{{ url_for('projects.detail', project_id=project.id) }}">{{ project.title }}</a></h2><p>{{ project.category }} · {{ project.course }} · {{ project.year }}</p><small>Atualizado em {{ project.updated_at|date_br }}</small></div>
+      <div class="dashboard-actions"><a class="button button-outline button-small" href="{{ url_for('projects.edit', project_id=project.id) }}">Editar</a><a class="text-link" href="{{ url_for('projects.detail', project_id=project.id) }}">Visualizar ↗</a><form method="post" action="{{ url_for('projects.delete', project_id=project.id) }}" data-confirm="Excluir este projeto e suas imagens? Esta ação não pode ser desfeita."><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="danger-link" type="submit">Excluir</button></form></div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}<div class="empty-state"><span class="empty-icon" aria-hidden="true">↗</span><h2>Comece pelo seu primeiro projeto</h2><p>Você pode salvar um rascunho e completar as informações antes de publicar.</p><a class="button" href="{{ url_for('projects.create') }}">Cadastrar projeto ＋</a></div>{% endif %}
+</section>
+{% endblock %}
